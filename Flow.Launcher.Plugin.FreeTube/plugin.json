@@ -7,6 +7,6 @@
     "Version": "1.0.0",
     "Language": "csharp",
     "Website": "https://github.com/ISAm-kbh/Flow-Launcher-FreeTube",
-    "IcoPath": "icon.png",
+    "IcoPath": "Images\\freetube.ico",
     "ExecuteFileName": "Flow.Launcher.Plugin.FreeTube.dll"
 }
