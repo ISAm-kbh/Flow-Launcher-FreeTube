@@ -1,0 +1,2 @@
+dotnet publish Flow.Launcher.Plugin.FreeTube -c Release -r win-x64 --no-self-contained
+Compress-Archive -LiteralPath Flow.Launcher.Plugin.FreeTube/bin/Release/win-x64/publish -DestinationPath Flow.Launcher.Plugin.FreeTube/bin/FreeTube.zip -Force
