@@ -2,21 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Controls;
 using Flow.Launcher.Plugin;
+using Flow.Launcher.Plugin.FreeTube.ViewModels;
+using Flow.Launcher.Plugin.FreeTube.Views;
 using Microsoft.Win32;
 
 namespace Flow.Launcher.Plugin.FreeTube
 {
-    public class FreeTube : IPlugin
+    public class FreeTube : IPlugin, ISettingProvider
     {
         private PluginInitContext _context;
         private const string Image = "Images/freetube.ico";
         private const string FreetubeRegistryKeyPath = "freetube\\shell\\open\\command";
         private string? FreetubePath;
+        private Settings _settings;
+        private SettingsViewModel _viewModel;
 
         public void Init(PluginInitContext context)
         {
             _context = context;
+            _settings = context.API.LoadSettingJsonStorage<Settings>();
+            _viewModel = new SettingsViewModel(_settings);
 
             FreetubePath = LoadFreetubePathFromRegistry();
         }
@@ -48,7 +55,7 @@ namespace Flow.Launcher.Plugin.FreeTube
                 Title = "Open with new instance",
                 SubTitle = "Open in FreeTube. If an instance exists, create a new instance",
                 IcoPath = Image,
-                Score = 1,
+                Score = _settings.favorNewInstance ? 1 : 0,
                 Action = c =>
                 {
                     var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(FreetubePath, "", $"--new-window {url}");
@@ -62,7 +69,7 @@ namespace Flow.Launcher.Plugin.FreeTube
                 Title = "Open with no new instances",
                 SubTitle = "Open in Freetube. If an instance exists, open within that instance",
                 IcoPath = Image,
-                Score = 0,
+                Score = _settings.favorNewInstance ? 0 : 1,
                 Action = c =>
                 {
                     var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(FreetubePath, "", $"{url}");
@@ -103,6 +110,11 @@ namespace Flow.Launcher.Plugin.FreeTube
             }
 
             return commandComponents[0].Replace("\"", "");
+        }
+
+        public Control CreateSettingPanel()
+        {
+            return new SettingsControl(_viewModel);
         }
     }
 }

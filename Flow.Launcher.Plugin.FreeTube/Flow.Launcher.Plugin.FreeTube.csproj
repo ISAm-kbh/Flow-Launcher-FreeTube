@@ -10,7 +10,9 @@
     <PackageTags>flow-launcher flow-plugin</PackageTags>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <UseWpf>true</UseWpf>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -19,15 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\freetube.ico" />
-    <None Remove="Images\FreeTube.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Images\freetube.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\FreeTube.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
