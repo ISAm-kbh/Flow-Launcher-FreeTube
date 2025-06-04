@@ -21,20 +21,13 @@ namespace Flow.Launcher.Plugin.FreeTube.Views
     /// </summary>
     public partial class SettingsControl : UserControl
     {
-        private readonly Settings _settings;
-        private readonly SettingsViewModel _viewModel;
-        
         public SettingsControl(SettingsViewModel viewModel)
         {
-            _viewModel = viewModel;
-            _settings = _viewModel.settings;
-            DataContext = _viewModel;
             InitializeComponent();
+            this.DataContext = viewModel;
         }
 
-        private void SettingsControl_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowStrategyComboBox.SelectedItem = _viewModel.favoredWindowStrategy;
         }
     }
 }
