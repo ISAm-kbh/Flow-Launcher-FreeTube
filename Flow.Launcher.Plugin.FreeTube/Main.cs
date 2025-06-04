@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
@@ -12,27 +14,28 @@ namespace Flow.Launcher.Plugin.FreeTube
 {
     public class FreeTube : IPlugin, ISettingProvider
     {
-        private PluginInitContext _context;
         private const string Image = "Images/freetube.ico";
         private const string FreetubeRegistryKeyPath = "freetube\\shell\\open\\command";
+
+        private PluginInitContext context;
         private string? FreetubePath;
-        private Settings _settings;
-        private SettingsViewModel _viewModel;
+        private Settings settings;
+        private SettingsViewModel viewModel;
 
         public void Init(PluginInitContext context)
         {
-            _context = context;
-            _settings = context.API.LoadSettingJsonStorage<Settings>();
-            _viewModel = new SettingsViewModel(_settings);
-
-            FreetubePath = LoadFreetubePathFromRegistry();
+            this.context = context;
+            this.settings = context.API.LoadSettingJsonStorage<Settings>();
+            this.viewModel = new SettingsViewModel(this.settings);
+            this.FreetubePath = null;    
         }
 
         public List<Result> Query(Query query)
         {
             var results = new List<Result>();
             string url = query.Search;
-            if (FreetubePath == null)
+                this.FreetubePath = LoadFreetubePathFromRegistry();
+            if (this.FreetubePath == null)
             {
                 Result noPathResult = new()
                 {
@@ -49,16 +52,18 @@ namespace Flow.Launcher.Plugin.FreeTube
             {
                 return results;
             }
+            int newScore = this.settings.favorNewInstance ? 1 : 0;
+            int existScore = this.settings.favorNewInstance ? 0 : 1;
 
             Result newWindowResult = new()
             {
                 Title = "Open with new instance",
                 SubTitle = "Open in FreeTube. If an instance exists, create a new instance",
                 IcoPath = Image,
-                Score = _settings.favorNewInstance ? 1 : 0,
+                Score = newScore,
                 Action = c =>
                 {
-                    var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(FreetubePath, "", $"--new-window {url}");
+                    var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(this.FreetubePath, "", $"--new-window {url}");
                     freetubeCommand.UseShellExecute = true;
                     SharedCommands.ShellCommand.Execute(freetubeCommand);
                     return true;
@@ -69,10 +74,10 @@ namespace Flow.Launcher.Plugin.FreeTube
                 Title = "Open with no new instances",
                 SubTitle = "Open in Freetube. If an instance exists, open within that instance",
                 IcoPath = Image,
-                Score = _settings.favorNewInstance ? 0 : 1,
+                Score = existScore,
                 Action = c =>
                 {
-                    var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(FreetubePath, "", $"{url}");
+                    var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(this.FreetubePath, "", $"{url}");
                     freetubeCommand.UseShellExecute = true;
                     SharedCommands.ShellCommand.Execute(freetubeCommand);
                     return true;
@@ -114,7 +119,7 @@ namespace Flow.Launcher.Plugin.FreeTube
 
         public Control CreateSettingPanel()
         {
-            return new SettingsControl(_viewModel);
+            return new SettingsControl(this.viewModel);
         }
     }
 }
