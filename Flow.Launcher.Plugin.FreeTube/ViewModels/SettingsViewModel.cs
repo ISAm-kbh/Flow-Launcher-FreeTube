@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,17 +25,17 @@ namespace Flow.Launcher.Plugin.FreeTube.ViewModels
         {
             get
             {
-                return settings.favorNewInstance ? windowFavorings[0] : windowFavorings[1];
+                return this.settings.favorNewInstance ? windowFavorings[0] : windowFavorings[1];
             }
             set
             {
                 if (value ==  windowFavorings[0])
                 {
-                    settings.favorNewInstance = true;
+                    this.settings.favorNewInstance = true;
                 }
                 else if (value == windowFavorings[1])
                 {
-                    settings.favorNewInstance = false;
+                    this.settings.favorNewInstance = false;
                 }
             }
         }
