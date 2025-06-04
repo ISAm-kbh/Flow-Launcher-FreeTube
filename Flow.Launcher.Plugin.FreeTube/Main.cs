@@ -34,7 +34,17 @@ namespace Flow.Launcher.Plugin.FreeTube
         {
             var results = new List<Result>();
             string url = query.Search;
+
+            if (this.settings.manuallySpecifyPath)
+            {
+                this.FreetubePath = this.settings.userSpecifiedPath;
+            }
+            else
+            {
                 this.FreetubePath = LoadFreetubePathFromRegistry();
+            }
+            NullifyPathIfExecutableUnreachable(ref this.FreetubePath);
+
             if (this.FreetubePath == null)
             {
                 Result noPathResult = new()
@@ -65,7 +75,15 @@ namespace Flow.Launcher.Plugin.FreeTube
                 {
                     var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(this.FreetubePath, "", $"--new-window {url}");
                     freetubeCommand.UseShellExecute = true;
-                    SharedCommands.ShellCommand.Execute(freetubeCommand);
+                    try
+                    {
+                        SharedCommands.ShellCommand.Execute(freetubeCommand);
+                    }
+                    catch (Win32Exception e)
+                    {
+                        this.context.API.ShowMsgError($"Error opening FreeTube executable at path: {this.FreetubePath}", e.Message);
+                        return false;
+                    }
                     return true;
                 }
             };
@@ -79,7 +97,15 @@ namespace Flow.Launcher.Plugin.FreeTube
                 {
                     var freetubeCommand = SharedCommands.ShellCommand.SetProcessStartInfo(this.FreetubePath, "", $"{url}");
                     freetubeCommand.UseShellExecute = true;
-                    SharedCommands.ShellCommand.Execute(freetubeCommand);
+                    try
+                    {
+                        SharedCommands.ShellCommand.Execute(freetubeCommand);
+                    }
+                    catch (Win32Exception e)
+                    {
+                        this.context.API.ShowMsgError($"Error opening FreeTube executable at path: {this.FreetubePath}", e.Message);
+                        return false;
+                    } 
                     return true;
                 }
             };
@@ -115,6 +141,16 @@ namespace Flow.Launcher.Plugin.FreeTube
             }
 
             return commandComponents[0].Replace("\"", "");
+        }
+
+        private void NullifyPathIfExecutableUnreachable(ref string? path)
+        {
+            bool pathFileExists = File.Exists(path);
+            if (!pathFileExists)
+            {
+                path = null;
+                return;
+            }
         }
 
         public Control CreateSettingPanel()

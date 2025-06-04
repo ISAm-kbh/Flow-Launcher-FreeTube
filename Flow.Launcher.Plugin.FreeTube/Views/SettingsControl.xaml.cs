@@ -27,7 +27,9 @@ namespace Flow.Launcher.Plugin.FreeTube.Views
             this.DataContext = viewModel;
         }
 
+        private void ExecutablePathTextBox_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            (this.DataContext as SettingsViewModel)?.clearExecutablePathWhenDisabled((bool)e.NewValue, (bool)e.OldValue);
         }
     }
 }

@@ -12,6 +12,7 @@
     <Grid Margin="70,13.5,18,13.5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -34,5 +35,24 @@
             HorizontalAlignment="Left"
             ItemsSource="{Binding Path=windowFavorings}"
             SelectedItem="{Binding Path=favoredWindowStrategy}"/>
+
+        <CheckBox
+            x:Name="ManualPathSpecificationCheckBox"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,4.5,9,4.5"
+            HorizontalAlignment="Left"
+            Content="Manually specify FreeTube executable Path"
+            IsChecked="{Binding Path=useManuallySpecifiedPath}"/>
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,4.5,9,4.5"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Text="{Binding Path=executablePath}"
+            TextWrapping="NoWrap"
+            IsEnabled="{Binding Path=useManuallySpecifiedPath}"
+            IsEnabledChanged="ExecutablePathTextBox_IsEnabledChanged"/>
     </Grid>
 </UserControl>

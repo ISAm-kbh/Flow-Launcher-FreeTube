@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Flow.Launcher.Plugin.FreeTube.ViewModels
 {
-    public class SettingsViewModel : BaseModel
+    public class SettingsViewModel : BaseModel, INotifyPropertyChanged
     {
         public SettingsViewModel(Settings _settings)
         {
@@ -18,6 +18,13 @@ namespace Flow.Launcher.Plugin.FreeTube.ViewModels
         }
 
         public Settings settings { get; init; }
+
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
         public List<string> windowFavorings { get; set; }
 
@@ -38,6 +45,31 @@ namespace Flow.Launcher.Plugin.FreeTube.ViewModels
                     this.settings.favorNewInstance = false;
                 }
             }
+        }
+
+        public bool useManuallySpecifiedPath
+        {
+            get => this.settings.manuallySpecifyPath;
+            set
+            {
+                this.settings.manuallySpecifyPath = value;
+                OnPropertyChanged(nameof(useManuallySpecifiedPath));
+            }
+        }
+
+        public void clearExecutablePathWhenDisabled(bool newValue, bool oldValue)
+        {
+            if (!newValue && oldValue)
+            {
+                executablePath = string.Empty;
+                OnPropertyChanged(nameof(executablePath));
+            }
+        }
+
+        public string executablePath
+        {
+            get => this.settings.userSpecifiedPath;
+            set => this.settings.userSpecifiedPath = value;
         }
     }
 }
