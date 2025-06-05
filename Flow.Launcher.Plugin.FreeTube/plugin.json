@@ -2,7 +2,7 @@
     "ID": "A2981425FA844FE4A47C360C96A638E8",
     "ActionKeyword": "ft",
     "Name": "FreeTube",
-    "Description": "A FreeTube plugin to open urls directly from Flow-Launcher",
+    "Description": "A plugin that opens urls in FreeTube directly from Flow Launcher",
     "Author": "ISAm-kbh",
     "Version": "1.0.0",
     "Language": "csharp",

@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Plugin Title -->
+    <system:String x:Key="flowlauncher_plugin_freetube_plugin_name">FreeTube</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_plugin_desc">A plugin that opens urls in FreeTube directly from Flow Launcher</system:String>
+    
+    <!-- File not found messaging-->
+    <system:String x:Key="flowlauncher_plugin_freetube_executable_not_found">FreeTube cannot be found</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_verify_install_message">
+        Verify that FreeTube is installed, or set the path manually in the plugin settings.
+    </system:String>
+    
+    <!-- Open in new instance -->
+    <system:String x:Key="flowlauncher_plugin_freetube_new_instance">New Instance</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_open_new_instance">Open with new instance</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_new_instance_desc">
+        Open in FreeTube. If an instance exists, create a new instance
+    </system:String>
+    
+    <!-- Open in existing instance -->
+    <system:String x:Key="flowlauncher_plugin_freetube_existing_instance">Existing Instance</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_open_existing_instance">Open with no new instances</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_existing_instance_desc">
+        Open in FreeTube. If an instance exists, open within that instance"
+    </system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_process_run_error">
+        Error opening FreeTube executable at path: {0}
+    </system:String>
+
+    <!-- Settings Labels -->
+    <system:String x:Key="flowlauncher_plugin_freetube_primary_open_strategy">Primary Open Strategy</system:String>
+    <system:String x:Key="flowlauncher_plugin_freetube_specify_executable_path">
+        Manually specify FreeTube executable path
+    </system:String>
+</ResourceDictionary>

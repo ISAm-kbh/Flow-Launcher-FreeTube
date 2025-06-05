@@ -12,7 +12,7 @@ using Microsoft.Win32;
 
 namespace Flow.Launcher.Plugin.FreeTube
 {
-    public class FreeTube : IPlugin, ISettingProvider
+    public class FreeTube : IPlugin, ISettingProvider, IPluginI18n
     {
         private const string Image = "Images/freetube.ico";
         private const string FreetubeRegistryKeyPath = "freetube\\shell\\open\\command";
@@ -20,13 +20,13 @@ namespace Flow.Launcher.Plugin.FreeTube
         private PluginInitContext context;
         private string? FreetubePath;
         private Settings settings;
-        private SettingsViewModel viewModel;
+        private SettingsViewModel? viewModel;
 
         public void Init(PluginInitContext context)
         {
             this.context = context;
             this.settings = context.API.LoadSettingJsonStorage<Settings>();
-            this.viewModel = new SettingsViewModel(this.settings);
+            this.viewModel = null;
             this.FreetubePath = null;    
         }
 
@@ -49,8 +49,8 @@ namespace Flow.Launcher.Plugin.FreeTube
             {
                 Result noPathResult = new()
                 {
-                    Title = "FreeTube cannot be found",
-                    SubTitle = "Verify that FreeTube is installed, or set the path manually in the plugin settings.",
+                    Title = this.context.API.GetTranslation("flowlauncher_plugin_freetube_executable_not_found"),
+                    SubTitle = this.context.API.GetTranslation("flowlauncher_plugin_freetube_verify_install_message"),
                     Score = 0,
                     IcoPath = Image,
                 };
@@ -67,8 +67,8 @@ namespace Flow.Launcher.Plugin.FreeTube
 
             Result newWindowResult = new()
             {
-                Title = "Open with new instance",
-                SubTitle = "Open in FreeTube. If an instance exists, create a new instance",
+                Title = this.context.API.GetTranslation("flowlauncher_plugin_freetube_open_new_instance"),
+                SubTitle = this.context.API.GetTranslation("flowlauncher_plugin_freetube_new_instance_desc"),
                 IcoPath = Image,
                 Score = newScore,
                 Action = c =>
@@ -81,7 +81,11 @@ namespace Flow.Launcher.Plugin.FreeTube
                     }
                     catch (Win32Exception e)
                     {
-                        this.context.API.ShowMsgError($"Error opening FreeTube executable at path: {this.FreetubePath}", e.Message);
+                        string errorMessage = string.Format(
+                            this.context.API.GetTranslation("flowlauncher_plugin_freetube_process_run_error"),
+                            this.FreetubePath
+                            );
+                        this.context.API.ShowMsgError(errorMessage, e.Message);
                         return false;
                     }
                     return true;
@@ -89,8 +93,8 @@ namespace Flow.Launcher.Plugin.FreeTube
             };
             Result existingWindowResult = new()
             {
-                Title = "Open with no new instances",
-                SubTitle = "Open in Freetube. If an instance exists, open within that instance",
+                Title = this.context.API.GetTranslation("flowlauncher_plugin_freetube_open_existing_instance"),
+                SubTitle = this.context.API.GetTranslation("flowlauncher_plugin_freetube_existing_instance_desc"),
                 IcoPath = Image,
                 Score = existScore,
                 Action = c =>
@@ -103,7 +107,11 @@ namespace Flow.Launcher.Plugin.FreeTube
                     }
                     catch (Win32Exception e)
                     {
-                        this.context.API.ShowMsgError($"Error opening FreeTube executable at path: {this.FreetubePath}", e.Message);
+                        string errorMessage = string.Format(
+                            this.context.API.GetTranslation("flowlauncher_plugin_freetube_process_run_error"),
+                            this.FreetubePath
+                            );
+                        this.context.API.ShowMsgError(errorMessage, e.Message);
                         return false;
                     } 
                     return true;
@@ -112,6 +120,25 @@ namespace Flow.Launcher.Plugin.FreeTube
             results.Add(newWindowResult);
             results.Add(existingWindowResult);
             return results;
+        }
+
+        public Control CreateSettingPanel()
+        {
+            if (this.viewModel == null)
+            {
+                this.viewModel = new SettingsViewModel(this.settings, this.context);
+            }
+            return new SettingsControl(this.viewModel);
+        }
+
+        public string GetTranslatedPluginTitle()
+        {
+            return this.context.API.GetTranslation("flowlauncher_plugin_freetube_plugin_name");
+        }
+
+        public string GetTranslatedPluginDescription()
+        {
+            return this.context.API.GetTranslation("flowlauncher_plugin_freetube_plugin_desc");
         }
 
         private string? LoadFreetubePathFromRegistry()
@@ -151,11 +178,6 @@ namespace Flow.Launcher.Plugin.FreeTube
                 path = null;
                 return;
             }
-        }
-
-        public Control CreateSettingPanel()
-        {
-            return new SettingsControl(this.viewModel);
         }
     }
 }

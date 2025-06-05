@@ -25,7 +25,7 @@
             Margin="0,4.5,9,4.5"
             VerticalAlignment="Center"
             FontSize="14"
-            Text="Primary Open Strategy"/>
+            Text="{DynamicResource flowlauncher_plugin_freetube_primary_open_strategy}"/>
         <ComboBox 
             Grid.Row="0"
             Grid.Column="1"
@@ -37,12 +37,11 @@
             SelectedItem="{Binding Path=favoredWindowStrategy}"/>
 
         <CheckBox
-            x:Name="ManualPathSpecificationCheckBox"
             Grid.Row="1"
             Grid.Column="0"
             Margin="0,4.5,9,4.5"
             HorizontalAlignment="Left"
-            Content="Manually specify FreeTube executable Path"
+            Content="{DynamicResource flowlauncher_plugin_freetube_specify_executable_path}"
             IsChecked="{Binding Path=useManuallySpecifiedPath}"/>
         <TextBox
             Grid.Row="1"

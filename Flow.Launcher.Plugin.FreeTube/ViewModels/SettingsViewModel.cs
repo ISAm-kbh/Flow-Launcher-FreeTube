@@ -11,13 +11,16 @@ namespace Flow.Launcher.Plugin.FreeTube.ViewModels
 {
     public class SettingsViewModel : BaseModel, INotifyPropertyChanged
     {
-        public SettingsViewModel(Settings _settings)
+        public SettingsViewModel(Settings _settings, PluginInitContext _context)
         {
             settings = _settings;
-            windowFavorings = new() { "New Instance", "Existing Instance" };
+            context = _context;
+            windowFavorings = new() { context.API.GetTranslation("flowlauncher_plugin_freetube_new_instance"),
+                    context.API.GetTranslation("flowlauncher_plugin_freetube_existing_instance") };
         }
 
         public Settings settings { get; init; }
+        private readonly PluginInitContext context;
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
